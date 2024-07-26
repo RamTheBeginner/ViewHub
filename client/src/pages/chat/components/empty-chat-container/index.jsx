@@ -1,4 +1,3 @@
-import React from 'react'
 import Lottie from 'react-lottie'
 import {animationDefaultOptions} from "@/lib/utils"
 const EmptyChatContainer = () => {

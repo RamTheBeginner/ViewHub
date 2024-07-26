@@ -43,7 +43,7 @@ const App = () => {
       }
     }
     if(!userInfo){
-      getUserData()
+      getUserData();
     }
     else{
       setLoading(false);

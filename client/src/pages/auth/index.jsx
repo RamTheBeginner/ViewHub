@@ -12,7 +12,7 @@ import { useAppStore } from '@/store';
 
 const Auth = () => {
     const navigate = useNavigate();
-    const { setUserInfo } = useAppStore(); // Corrected usage
+    const { setUserInfo } = useAppStore();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -47,7 +47,7 @@ const Auth = () => {
             try {
                 console.log("Entered");
                 const response = await apiClient.post(LOGIN_ROUTE, { email, password });
-                console.log('Login response:', response);
+                /*console.log('Login response:', response);*/
                 if (response.data.user) {
                     setUserInfo(response.data.user);
                     if (response.data.user.profileSetup) {
@@ -57,9 +57,11 @@ const Auth = () => {
                     }
                 }
             } catch (error) {
+                toast.error("Incorrect Credintials");
                 console.log('Login error:', error);
             }
         } else {
+            
             console.error('Login validation failed');
         }
     };
@@ -69,7 +71,7 @@ const Auth = () => {
             try {
                 console.log("Entered");
                 const response = await apiClient.post(SIGNUP_ROUTE, { email, password });
-                console.log('Signup response:', response);
+                /*console.log('Signup response:', response);*/
                 if (response.status === 201) {
                     setUserInfo(response.data.user);
                     if (response.data.user.profileSetup) {

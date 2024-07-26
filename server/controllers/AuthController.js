@@ -48,7 +48,7 @@ export const login = async (request, response, next) => {
       email,
     }); /* As the email is Unique we are using findone function*/
     if (!user) return response.status(404).send("User Not Found");
-    const auth = compare(password, user.password); /* Returns a Boolean Value*/
+    const auth = await compare(password, user.password); /* Returns a Boolean Value*/
     if (!auth) return response.status(400).send("Password is Incorrect");
     response.cookie("jwt", createToken(email, user.id), {
       maxAge,
@@ -136,7 +136,7 @@ export const addProfileImage = async (request, response, next) => {
   }
 
   const date = Date.now();
-  let fileName = "uploads/profiles/" + date + request.file.originalName;
+  let fileName = "uploads/profiles/" + date + request.file.originalname;
   renameSync(request.file.path, fileName);
 
   try {
@@ -173,5 +173,21 @@ export const removeProfileImage = async (request, response, next) => {
   } catch (err) {
     console.log({ err });
     return response.status(500).send("Internal server Error");
+  }
+};
+
+export const logout = async (request, response, next) => {
+  try {
+    response.cookie("jwt", "", {
+      maxAge: 1,
+      secure: true,
+      sameSite: 'None',
+      httpOnly: true, // Ensures the cookie is only accessible via HTTP(S) requests
+    });
+
+    return response.status(200).json({ message: "Logout Successful" });
+  } catch (err) {
+    console.log({ err });
+    return response.status(500).json({ message: "Unable to Logout" });
   }
 };
