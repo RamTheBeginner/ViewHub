@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProfileInfo from "./components/profile-info";
 import NewDM from "./components/new-dm";
+import { apiClient } from "@/lib/api-client";
+import { GET_DM_CONTACTS_ROUTES } from "@/utils/constants";
 
 const ContactsContainer = () => {
+  useEffect(() => {
+    const getContacts = async () => {
+      try {
+        const response = await apiClient.get(GET_DM_CONTACTS_ROUTES);
+        if (response.data.contacts) {
+          console.log(response.data.contacts);
+        }
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+
+    getContacts();
+  }, []);
   return (
     <div className="relative md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-[#2f303b] w-full">
       <div className="pt-3">
@@ -19,7 +35,7 @@ const ContactsContainer = () => {
           <Title text="Channels" />
         </div>
       </div>
-      <ProfileInfo/>
+      <ProfileInfo />
     </div>
   );
 };
