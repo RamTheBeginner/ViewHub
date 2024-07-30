@@ -3,14 +3,17 @@ import ProfileInfo from "./components/profile-info";
 import NewDM from "./components/new-dm";
 import { apiClient } from "@/lib/api-client";
 import { GET_DM_CONTACTS_ROUTES } from "@/utils/constants";
+import { useAppStore } from "@/store";
+import ContactList from "@/components/contact-list";
 
 const ContactsContainer = () => {
+  const { setDirectMessagesContacts , directMessagesContacts} = useAppStore();
   useEffect(() => {
     const getContacts = async () => {
       try {
         const response = await apiClient.get(GET_DM_CONTACTS_ROUTES);
         if (response.data.contacts) {
-          console.log(response.data.contacts);
+          setDirectMessagesContacts(response.data.contacts);
         }
       } catch (error) {
         console.error("Error fetching contacts:", error);
@@ -28,6 +31,9 @@ const ContactsContainer = () => {
         <div className="flex items-center justify-between pr-10">
           <Title text="Direct Messages" />
           <NewDM />
+        </div>
+        <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+           <ContactList contacts={directMessagesContacts} />
         </div>
       </div>
       <div className="my-5">
