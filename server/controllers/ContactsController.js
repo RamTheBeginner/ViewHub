@@ -96,3 +96,20 @@ export const getContactsForDMList = async (request, response, next) => {
     return response.status(500).json({ message: "Unable to fetch contacts" });
   }
 };
+
+export const getAllContacts = async (request, response, next) => {
+  try {
+    const users = await User.find(
+      { _id: { $ne: request.userId } },
+      "firstName lastName _id email"
+    );
+    const contacts = users.map((user) => ({
+      label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+      value: user._id,
+    }));
+    return response.status(200).json({ contacts });
+  } catch (err) {
+    console.error("Error searching contacts:", err);
+    return response.status(500).json({ message: "Unable to search contacts" });
+  }
+};

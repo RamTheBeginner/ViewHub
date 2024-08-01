@@ -47,6 +47,16 @@ const MessageBar = () => {
         messageType: "text",
         fileUrl: undefined,
       });
+      setMessage("");
+    } else if (selectedChatType === "channel") {
+      socket.emit("send-channel-message", {
+        sender: userInfo.id,
+        content: message,
+        messageType: "text",
+        fileUrl: undefined,
+        channelId: selectedChatData._id,
+      });
+      setMessage("");
     }
   };
 
@@ -68,8 +78,8 @@ const MessageBar = () => {
             "Content-Type": "multipart/form-data",
           },
           onUploadProgress: (data) => {
-            setFileUploadProgress(Math.round((100*data.loaded) / data.total))
-          }
+            setFileUploadProgress(Math.round((100 * data.loaded) / data.total));
+          },
         });
 
         if (response.status === 200 && response.data) {
@@ -82,7 +92,16 @@ const MessageBar = () => {
               messageType: "file",
               fileUrl: response.data.filePath,
             });
+          } else if (selectedChatType === "channel") {
+            socket.emit("send-channel-message", {
+              sender: userInfo.id,
+              content: undefined,
+              messageType: "file",
+              fileUrl: response.data.filePath,
+              channelId: selectedChatData._id,
+            });
           }
+          setMessage("");
         } else {
           console.error("Failed to upload file:", response);
         }

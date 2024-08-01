@@ -74,3 +74,17 @@
   font-weight: 500;
   font-style: normal;
 }
+
+::-webkit-scrollbar {
+  width: 8px; /* Adjust width to make the scrollbar thinner or thicker */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8957d8; /* Purplish-grey color */
+  border-radius: 4px; /* Optional: Adds rounded corners to the scrollbar thumb */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #2a2b33; /* Optional: Adds background color to the track */
+}
+

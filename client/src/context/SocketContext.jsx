@@ -18,23 +18,25 @@ export const SocketProvider = ({ children }) => {
       socket.current = io(HOST, {
         query: { userId: userInfo.id },
       });
+
       socket.current.on("connect", () => {
         console.log("Connected to the socket server");
       });
 
-      const handleRecieveMessage = (message) => {
-        const { selectedChatData, selectedChatType , addMessage } = useAppStore.getState();
+      const handleReceiveMessage = (message) => {
+        const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
         if (
-          (selectedChatType !== undefined &&
-            selectedChatData._id === message.sender._id) ||
-          selectedChatData._id === message.recipient._id
+          (selectedChatType === "contact" &&
+            (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)) ||
+          (selectedChatType === "channel" && selectedChatData._id === message.channelId)
         ) {
-          console.log("message recieved" , message);
+          console.log("Message received", message);
           addMessage(message);
         }
       };
 
-      socket.current.on("recieveMessage", handleRecieveMessage);
+      socket.current.on("receiveMessage", handleReceiveMessage);
+      socket.current.on("receive-channel-message", handleReceiveMessage);
 
       return () => {
         socket.current.disconnect();
